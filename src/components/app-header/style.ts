@@ -1,0 +1,120 @@
+import styled from 'styled-components'
+
+export const AppHeaderWrapper = styled.div`
+  height: 75px;
+  background-color: #242424;
+  font-size: 14px;
+  color: #fff;
+
+  .content {
+    display: flex;
+    justify-content: space-between;
+    ${(props) => props.theme.mixin.wrapV1}
+  }
+
+  .diver {
+    height: 5px;
+    background-color: ${(props) => props.theme.color.primary};
+  }
+`
+export const HeaderLeft = styled.div`
+  display: flex;
+
+  .logo {
+    display: flex;
+    width: 176px;
+    height: 70px;
+    background-position: 0 0;
+    text-indent: -9999px;
+  }
+
+  .title-list {
+    display: flex;
+    line-height: 70px;
+
+    .item {
+      position: relative;
+
+      a {
+        display: block;
+        padding: 0 20px;
+        color: #ccc;
+      }
+
+      &:last-of-type a {
+        position: relative;
+
+        ::after {
+          position: absolute;
+          content: '';
+          width: 28px;
+          height: 19px;
+          background: url('../../assets/img/topbar_sprite.png') no-repeat;
+          background-position: -190px 0;
+          top: 20px;
+          right: -15px;
+        }
+      }
+
+      &:hover a,
+      .active {
+        color: #fff;
+        background: #000;
+        text-decoration: none;
+      }
+
+      .active .icon {
+        position: absolute;
+        display: inline-block;
+        width: 12px;
+        height: 7px;
+        bottom: -1px;
+        left: 50%;
+        transform: translate(-50%, 0);
+        background-position: -226px 0;
+      }
+    }
+  }
+`
+
+export const HeaderRight = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+
+  .input {
+    display: block;
+    background-color: #fff;
+    width: 158px;
+    height: 32px;
+    border-radius: 16px;
+    overflow: hidden;
+
+    input {
+      &::placeholder {
+        font-size: 12px;
+      }
+    }
+  }
+
+  .center {
+    width: 90px;
+    height: 33px;
+    line-height: 33px;
+    text-align: center;
+    border: 1px solid #4F4F4F;
+    border-radius: 20px;
+    margin: 0 16px;
+    color: #ccc;
+  }
+
+  .login {
+    display: block;
+    width: 28px;
+    color: #787878;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+`

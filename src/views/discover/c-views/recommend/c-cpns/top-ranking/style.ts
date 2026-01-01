@@ -1,0 +1,10 @@
+import styled from "styled-components";
+
+export const TopRankingWrapper = styled.div`
+  .content {
+    height: 472px;
+    margin-top: 20px;
+    background: url(${require('@/assets/img/rank_bg.png')});
+    display: flex;
+  }
+`
