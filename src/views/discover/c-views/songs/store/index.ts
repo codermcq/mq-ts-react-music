@@ -9,8 +9,8 @@ interface IParams {
 
 export const fetchSongsData = createAsyncThunk(
   'fetchSongs',
-  (params: { page: number; size: number }, { dispatch }) => {
-    getPlayList(params.page, params.size).then((res: any) => {
+  (params: { page: number; size: number, cat: string }, { dispatch }) => {
+    getPlayList(params.page, params.size, params.cat).then((res: any) => {
       const result = res.playlists
       dispatch(changeSongsList(result))
     })

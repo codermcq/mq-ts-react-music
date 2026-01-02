@@ -1,4 +1,4 @@
-import React, { FC, memo, ReactNode, useEffect, useMemo, useRef } from 'react'
+import React, { FC, memo, ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import { SongsWrapper } from './style'
 import { useAppDispatch, useAppSelector } from '@/store'
 import { fetchSongsData } from './store'
@@ -19,6 +19,10 @@ const Songs: FC<IProps> = (props) => {
     }),
     shallowEqual
   )
+
+  const [isShowSelect, setIsShowSelect] = useState(false)
+  const [currentCat, setCurrentCat] = useState('全部')
+  const [currentTag, setCurrentTag] = useState('全部')
 
   // console.log(categories)
   // 处理分类标签数据：根据 categories 的 key 值和 sub 中的 category 值进行匹配分组
@@ -63,26 +67,79 @@ const Songs: FC<IProps> = (props) => {
   const currentPageSize = useRef(35)
 
   useEffect(() => {
-    dispatch(fetchSongsData({ page: 0, size: 35 }))
-  }, [dispatch])
+    dispatch(fetchSongsData({ page: 0, size: 35, cat: currentCat }))
+  }, [dispatch, currentCat])
 
   function handlePageChange(page: number, size: number) {
-    dispatch(fetchSongsData({ page, size }))
+    const currentPage = page - 1
+    dispatch(fetchSongsData({ page: currentPage, size, cat: currentCat }))
     window.scrollTo(0, 0)
     currentPageSize.current = size
   }
+
+  // 处理选择分类按钮的点击
+  function handleSelectBtnClick() {
+    setIsShowSelect(!isShowSelect)
+  }
+
+  const categoriesEntries = Object.values(categories)
+  const groupedCategoriesEntries = Object.values(groupedCategories)
+
+  function handleSelectItemClick(tag: any) {
+    setCurrentCat(tag)
+    dispatch(fetchSongsData({ page: 0, size: 35, cat: currentCat}))
+    setIsShowSelect(false)
+    setCurrentTag(tag)
+  }
+  console.log(currentCat)
 
   return (
     <SongsWrapper ref={songsPlayListRef}>
       <div className="header">
         <h3>
-          <span className="classification">全部</span>
-          <a className="classification-btn">
+          <span className="classification">{currentTag}</span>
+          <a className="classification-btn" onClick={handleSelectBtnClick}>
             <i>
               选择分类
               <em className="u-btn"></em>
             </i>
           </a>
+          {isShowSelect && (
+            <div className="select-catlist">
+              <i className="icon"></i>
+              <div className="select-header">
+                <a className="all-btn" onClick={() => handleSelectItemClick('全部')}>全部风格</a>
+              </div>
+              <div className="select-content">
+                <div className="content-left">
+                  {categoriesEntries &&
+                    categoriesEntries?.map((item: any) => {
+                      return <div className="category-item" key={item}>{item}</div>
+                    })}
+                </div>
+                <div className="content-right">
+                  {
+                    groupedCategoriesEntries && groupedCategoriesEntries.map((item: any) => {
+                      return (
+                        <div className='tag' key={item}>
+                          {
+                            item.map((tag: any) => {
+                              return (
+                                <div className='tag-item' key={tag}>
+                                  <a onClick={() => handleSelectItemClick(tag)}>{tag}</a>
+                                  <span className='line'>|</span>
+                                </div>
+                              )
+                            })
+                          }
+                        </div>
+                      )
+                    })
+                  }
+                </div>
+              </div>
+            </div>
+          )}
         </h3>
         <div className="hot-btn">
           <a className="al" href="#"></a>

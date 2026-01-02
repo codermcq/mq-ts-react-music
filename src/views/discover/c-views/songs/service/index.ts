@@ -9,12 +9,13 @@ import mqRequest from "@/services";
 //   })
 // }
 
-export function getPlayList(offset: number = 0, limit: number = 35, ) {
+export function getPlayList(offset: number = 0, limit: number = 35, cat: string = '全部') {
   return mqRequest.get({
     url: '/top/playlist',
     params: {
       limit,
-      offset
+      offset,
+      cat
     }
   })
 }

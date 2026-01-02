@@ -9,6 +9,7 @@ export const SongsWrapper = styled.div`
   box-sizing: border-box;
 
   .header {
+    position: relative;
     width: 900px;
     height: 41px;
     border-bottom: 2px solid #c20c0c;
@@ -58,6 +59,105 @@ export const SongsWrapper = styled.div`
         margin-left: 5px;
         background: url(${require('@/assets/img/wyy_iconall.png')}) no-repeat -70px -543px;
         vertical-align: middle;
+      }
+
+      &:hover {
+        background-position: right -182px;
+      }
+      &:hover i {
+        background-position: 0 -141px;
+      }
+    }
+
+    .select-catlist {
+      position: absolute;
+      z-index: 10;
+      top: 55px;
+      left: -30px;
+      width: 720px;
+      height: 500px;
+      background-color: #fff;
+      box-shadow: 4px 4px 8px 4px rgba(157, 157, 157, 0.5);
+
+      .icon {
+        display: inline-block;
+        width: 24px;
+        height: 11px;
+        background: url(${require('@/assets/img/wyy_icon.png')}) no-repeat -48px 0;
+        position: absolute;
+        top: -12px;
+        left: 132px;
+      }
+
+      .select-header {
+        height: 50px;
+        padding: 15px 0 10px 26px;
+        box-sizing: border-box;
+
+        .all-btn {
+          display: inline-block;
+          width: 75px;
+          height: 26px;
+          font-size: 12px;
+          color: #333;
+          font-weight: normal;
+          text-align: center;
+          line-height: 26px;
+          background: url(${require('@/assets/img/btn_sprite.png')}) no-repeat 0 -64px;
+        }
+      }
+
+      .select-content {
+        display: flex;
+        border-top: 1px solid #e6e6e6;
+        height: calc(100% - 50px);
+
+        .content-left {
+          display: flex;
+          flex-direction: column;
+          width: 100px;
+          height: 100%;
+
+          .category-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            color: #333;
+            font-weight: bold;
+            font-size: 14px;
+            background: url(${require('@/assets/img/wyy_iconall.png')}) no-repeat 0 -9999px;
+          }
+        }
+
+        .content-right {
+          display: flex;
+          flex-direction: column;
+          flex-wrap: wrap;
+          flex: 1;
+
+          .tag {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+
+            .tag-item {
+              font-size: 12px;
+              color: #333;
+              font-weight: normal;
+
+              &:hover {
+                text-decoration: underline;
+              }
+
+              .line {
+                margin: 0 8px 0 10px;
+                color: #333;
+              }
+            }
+          }
+        }
       }
     }
   }
