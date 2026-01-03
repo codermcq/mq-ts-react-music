@@ -139,6 +139,11 @@ export const HeaderWrapper = styled.div`
 export const LeftWrapper = styled.div`
   width: 553px;
   color: #fff;
+  overflow: hidden;
+  overflow-y: auto;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 
   .list {
     display: flex;
@@ -156,7 +161,8 @@ export const LeftWrapper = styled.div`
       color: #fff !important;
     }
 
-    &:hover, &.active {
+    &:hover,
+    &.active {
       background-color: rgba(0, 0, 0, 0.3);
     }
 
@@ -226,6 +232,9 @@ export const RightWrapper = styled.div`
     overflow: auto;
     margin: 20px auto;
     color: #989898;
+    &::-webkit-scrollbar {
+      display: none;
+    }
 
     .lyric-item {
       text-align: center;
@@ -240,5 +249,4 @@ export const RightWrapper = styled.div`
       }
     }
   }
-
 `

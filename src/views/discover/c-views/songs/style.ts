@@ -115,8 +115,9 @@ export const SongsWrapper = styled.div`
         .content-left {
           display: flex;
           flex-direction: column;
-          width: 100px;
+          width: 90px;
           height: 100%;
+          border-right: 1px solid #e6e6e6;
 
           .category-item {
             display: flex;
@@ -126,7 +127,35 @@ export const SongsWrapper = styled.div`
             color: #333;
             font-weight: bold;
             font-size: 14px;
-            background: url(${require('@/assets/img/wyy_iconall.png')}) no-repeat 0 -9999px;
+
+
+            &::before {
+              display: inline-block;
+              content: ' ';
+              width: 23px;
+              height: 23px;
+              overflow: hidden;
+              vertical-align: middle;
+              margin-right: 8px;
+              margin-bottom: 4px;
+              background: url(${require('@/assets/img/wyy_iconall.png')}) no-repeat 0 -9999px;
+            }
+
+            &:nth-child(1)::before {
+              background-position: -20px -735px;
+            }
+            &:nth-child(2)::before {
+              background-position: 0 -60px;
+            }
+            &:nth-child(3)::before {
+              background-position: 0 -88px;
+            }
+            &:nth-child(4)::before {
+              background-position: 0 -117px;
+            }
+            &:nth-child(5)::before {
+              background-position: 0 -141px;
+            }
           }
         }
 
@@ -138,6 +167,7 @@ export const SongsWrapper = styled.div`
 
           .tag {
             flex: 1;
+            padding-left: 15px;
             display: flex;
             align-items: center;
             flex-wrap: wrap;
@@ -153,7 +183,7 @@ export const SongsWrapper = styled.div`
 
               .line {
                 margin: 0 8px 0 10px;
-                color: #333;
+                color: #d8d8d8;
               }
             }
           }
