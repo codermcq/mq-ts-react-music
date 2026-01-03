@@ -49,15 +49,27 @@ export const MenuItemWrapper = styled.div`
 
         .icon-play {
           display: inline-block;
+          z-index: 10;
           width: 16px;
           height: 17px;
           background: url(${require('@/assets/img/wyy_icon.png')}) no-repeat 0 0;
+          cursor: pointer;
 
           &:hover {
             background-position: 0 -60px;
           }
         }
       }
+    }
+
+    .mask {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      max-height: 113px;
+      cursor: pointer;
     }
   }
 

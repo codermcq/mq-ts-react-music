@@ -91,7 +91,6 @@ const Songs: FC<IProps> = (props) => {
     setIsShowSelect(false)
     setCurrentTag(tag)
   }
-  console.log(currentCat)
 
   return (
     <SongsWrapper ref={songsPlayListRef}>

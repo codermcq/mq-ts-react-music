@@ -1,4 +1,4 @@
-import React, { FC, memo, ReactNode, useEffect, useRef, useState } from 'react'
+import React, { FC, memo, ReactNode, useEffect, useRef, useState, RefObject, useCallback } from 'react'
 import { BarControlWrapper, BarOperatorWrapper, BarPlayWrapper, PlayerBarWrapper } from './style'
 import { NavLink } from 'react-router-dom'
 import { Slider, message, Alert } from 'antd'
@@ -33,9 +33,9 @@ const AppPlayerBar: FC<IProps> = (props) => {
   const [currentTime, setCurrentTime] = useState(0)
   const [isSlider, setIsSlider] = useState(false)
   const [isExpand, setIsExpand] = useState(false)
+  const playlistRef = useRef<HTMLDivElement>(null)
 
   const audioRef = useRef<HTMLAudioElement>(null)
-
   const listCount = playSongList.length
 
   useEffect(() => {
@@ -54,7 +54,7 @@ const AppPlayerBar: FC<IProps> = (props) => {
 
     // 获取音乐的总时长
     setDuration(currentSong?.dt)
-  }, [currentSong])
+  }, [currentSong, playSongList])
 
   // play按钮被点击时
   function handlePlayClick() {
@@ -159,6 +159,25 @@ const AppPlayerBar: FC<IProps> = (props) => {
     setIsExpand(false)
   }
 
+  // 点击外部关闭播放列表
+  const handleClickOutside = useCallback((event: MouseEvent) => {
+    if (playlistRef.current && !playlistRef.current.contains(event.target as Node)) {
+      setIsExpand(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (isExpand) {
+      document.addEventListener('mousedown', handleClickOutside)
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isExpand, handleClickOutside])
+
   return (
     <PlayerBarWrapper>
       <div className="content">
@@ -206,7 +225,11 @@ const AppPlayerBar: FC<IProps> = (props) => {
           </div>
         </BarOperatorWrapper>
       </div>
-      { isExpand && <Playlist closeClick={() => handleCloseCick()} /> }
+      { isExpand && (
+        <div ref={playlistRef}>
+          <Playlist closeClick={() => handleCloseCick()} />
+        </div>
+      )}
       <audio ref={audioRef} onTimeUpdate={handleTimeUpdate} onEnded={handleTimeEnded} />
     </PlayerBarWrapper>
   )

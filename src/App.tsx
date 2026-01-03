@@ -4,13 +4,20 @@ import routes from './router'
 import AppHeader from './components/app-header'
 import AppFooter from './components/app-footer'
 import AppPlayerBar from './views/player/app-player-bar'
-import { useAppDispatch } from './store'
+import { useAppDispatch, useAppSelector } from './store'
 import { fetchCurrentSongAction } from './views/player/store'
+import { shallowEqual } from 'react-redux'
+import songs from './views/discover/c-views/songs'
 
 const App = memo(() => {
+  const {playSongIndex, playSongList} = useAppSelector((state) => ({
+    playSongIndex: state.player.playSongIndex,
+    playSongList: state.player.playSongList
+  }), shallowEqual)
+
   const dispatch = useAppDispatch()
   useEffect(() => {
-    dispatch(fetchCurrentSongAction(3326372789))
+    dispatch(fetchCurrentSongAction(playSongList[playSongIndex].id || playSongList[0].id))
   }, [dispatch])
 
   return (

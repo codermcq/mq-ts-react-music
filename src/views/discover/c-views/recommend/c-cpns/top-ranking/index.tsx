@@ -2,7 +2,7 @@ import React, { FC, memo, ReactNode } from 'react'
 import { TopRankingWrapper } from './style'
 import SectionHeaderV1 from '@/components/section-header-v1'
 import { useAppSelector } from '@/store'
-import randking from '../../../randking'
+import randking from '../../../ranking'
 import { shallowEqual } from 'react-redux'
 import TopRankingItem from '../top-ranking-item'
 
@@ -22,11 +22,9 @@ const TopRanking: FC<IProps> = (props) => {
     <TopRankingWrapper>
       <SectionHeaderV1 title="榜单" moreLink="/discover/ranking" />
       <div className="content">
-        {
-          randkings.map(item => {
-            return <TopRankingItem key={item.id} itemData={item} />
-          })
-        }
+        {randkings.map((item) => {
+          return <TopRankingItem key={item.id} itemData={item} />
+        })}
       </div>
     </TopRankingWrapper>
   )

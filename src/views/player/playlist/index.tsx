@@ -5,7 +5,7 @@ import { CloseOutlined } from '@ant-design/icons'
 import { formatTime } from '@/utils/format'
 import classNames from 'classnames'
 import { shallowEqual } from 'react-redux'
-import { changeCurrentSongAction, changeLyricsAction, changePlaySongListAction } from '../store'
+import { changeCurrentSongAction, changeLyricsAction, changePlaySongIndexAction, changePlaySongListAction } from '../store'
 import { scrollTo } from '@/utils/uni-helper'
 import { getSongLyric } from '../service'
 import { parseLyric } from '@/utils/parse-lyric'
@@ -33,13 +33,14 @@ const Playlist: FC<IProps> = (props) => {
   }
 
   // 处理歌曲列表点击后播放歌曲的操作
-  function handleListItemClick(item: any) {
+  function handleListItemClick(item: any, index: number) {
     dispatch(changeCurrentSongAction(item))
     getSongLyric(item.id).then((res: any) => {
       const lyricString = res.lrc.lyric
       const lyric = parseLyric(lyricString)
       dispatch(changeLyricsAction(lyric))
     })
+    dispatch(changePlaySongIndexAction(index))
   }
 
   useEffect(() => {
@@ -77,12 +78,12 @@ const Playlist: FC<IProps> = (props) => {
       </HeaderWrapper>
       <div className="playlist-content">
         <LeftWrapper className="playlist-left">
-          {playSongList.map((item) => {
+          {playSongList.map((item, index) => {
             return (
               <div
                 className={classNames('list', { active: item.id === currentSong.id })}
                 key={item.id}
-                onClick={() => handleListItemClick(item)}
+                onClick={() => handleListItemClick(item, index)}
               >
                 <div className="list-left">
                   <span

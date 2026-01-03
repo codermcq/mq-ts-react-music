@@ -1,4 +1,3 @@
-import Randking from '@/views/discover/c-views/ranking'
 import React from 'react'
 import { Navigate, RouteObject } from 'react-router-dom'
 
@@ -11,10 +10,11 @@ const NotFound = React.lazy(() => import('@/views/not-found'))
 const Album = React.lazy(() => import('@/views/discover/c-views/album'))
 const Artist = React.lazy(() => import('@/views/discover/c-views/artist'))
 const Djradio = React.lazy(() => import('@/views/discover/c-views/djradio'))
-const Randing = React.lazy(() => import('@/views/discover/c-views/ranking'))
+const Ranking = React.lazy(() => import('@/views/discover/c-views/ranking'))
 const Recommend = React.lazy(() => import('@/views/discover/c-views/recommend'))
 const Songs = React.lazy(() => import('@/views/discover/c-views/songs'))
 const Player = React.lazy(() => import('@/views/player'))
+const Playlist = React.lazy(() => import('@/views/menu-playlist'))
 
 const routes: RouteObject[] = [
   {
@@ -47,7 +47,7 @@ const routes: RouteObject[] = [
       },
       {
         path: '/discover/ranking',
-        element: <Randking />
+        element: <Ranking />
       },
       {
         path: '/discover/songs',
@@ -70,6 +70,10 @@ const routes: RouteObject[] = [
   {
     path: '/player',
     element: <Player />
+  },
+  {
+    path: '/playlist',
+    element: <Playlist />
   },
   {
     path: '*',

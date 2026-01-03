@@ -232,6 +232,7 @@ export const RightWrapper = styled.div`
     overflow: auto;
     margin: 20px auto;
     color: #989898;
+    
     &::-webkit-scrollbar {
       display: none;
     }

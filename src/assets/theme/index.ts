@@ -18,6 +18,11 @@ const theme = {
       width: 1030px;
       margin: 0 auto;
     `,
+    wrapV4: `
+      width: 920px;
+      margin: 0 auto;
+    `,
+
   }
 }
 

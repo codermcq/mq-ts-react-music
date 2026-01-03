@@ -76,7 +76,6 @@ export const changeMusicAction = createAsyncThunk<void, boolean, { state: IRootS
     })
   }
 )
-
 interface IPlayerState {
   currentSong: any
   lyrics: any
