@@ -10,7 +10,8 @@ interface IParams {
 export const fetchSongsData = createAsyncThunk(
   'fetchSongs',
   (params: { page: number; size: number; cat: string }, { dispatch }) => {
-    getPlayList(params.page * 35, params.size, params.cat).then((res: any) => {
+    console.log(params.page)
+    getPlayList(params.page * params.size, params.size, params.cat).then((res: any) => {
       const result = res.playlists
       dispatch(changeSongsList(result))
     })
@@ -50,10 +51,10 @@ const songsSclice = createSlice({
     changeSub(state, { payload }) {
       state.sub = payload
     },
-    changeCurrenPage(state, { payload }) {
+    changeCurrentPage(state, { payload }) {
       state.currentPage = payload
     },
-    changeCurrenPageSize(state, { payload }) {
+    changeCurrentPageSize(state, { payload }) {
       state.currentPageSize = payload
     }
   }
@@ -63,7 +64,7 @@ export const {
   changeSongsList,
   changeCategories,
   changeSub,
-  changeCurrenPage,
-  changeCurrenPageSize
+  changeCurrentPage,
+  changeCurrentPageSize
 } = songsSclice.actions
 export default songsSclice.reducer

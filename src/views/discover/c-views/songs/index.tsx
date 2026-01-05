@@ -10,7 +10,7 @@ import React, {
 } from 'react'
 import { SongsWrapper } from './style'
 import { useAppDispatch, useAppSelector } from '@/store'
-import { changeCurrenPage, changeCurrenPageSize, fetchSongsData } from './store'
+import { changeCurrentPage, changeCurrentPageSize, fetchSongsData } from './store'
 import { shallowEqual } from 'react-redux'
 import SongsMenusItem from '@/components/songs-menus-item'
 import { Pagination } from 'antd'
@@ -94,7 +94,9 @@ const Songs: FC<IProps> = (props) => {
 
   useEffect(() => {
     if (offset && limit) {
-      dispatch(fetchSongsData({ page: Number(offset)/35, size: Number(limit), cat: currentCat }))
+      console.log(offset, limit)
+      dispatch(fetchSongsData({ page: (Number(offset) / Number(limit)), size: Number(limit), cat: currentCat }))
+      changeCurrentPage(Number(offset) / Number(limit))
     } else {
       dispatch(fetchSongsData({ page: 0, size: 35, cat: currentCat }))
     }
@@ -102,12 +104,12 @@ const Songs: FC<IProps> = (props) => {
 
   function handlePageChange(page: number, size: number) {
     const offsetPage = page - 1
-    changeCurrenPageSize(size)
+    changeCurrentPageSize(size)
     dispatch(fetchSongsData({ page: offsetPage, size, cat: currentCat }))
     searchParams.set('offset', (offsetPage * 35).toString())
     searchParams.set('limit', size.toString())
     setSearchParams(searchParams)
-    changeCurrenPage(page)
+    changeCurrentPage(page)
     // window.scrollTo(0, 0)
   }
 
@@ -121,11 +123,11 @@ const Songs: FC<IProps> = (props) => {
 
   function handleSelectItemClick(tag: any) {
     setCurrentCat(tag)
-    dispatch(fetchSongsData({ page: 0, size: currentPageSize, cat: currentCat }))
+    // dispatch(fetchSongsData({ page: 0, size: currentPageSize, cat: currentCat }))
     setIsShowSelect(false)
     setCurrentTag(tag)
     setSearchParams({ cat: tag })
-    changeCurrenPageSize(0)
+    changeCurrentPageSize(0)
   }
 
   const handleClickOutside = useCallback((event: MouseEvent) => {
@@ -216,6 +218,7 @@ const Songs: FC<IProps> = (props) => {
         total={350}
         current={currentPage}
         pageSizeOptions={[10, 20, 35, 50]}
+        defaultPageSize={35}
         pageSize={currentPageSize}
         onChange={handlePageChange}
       />
