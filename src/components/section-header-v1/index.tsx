@@ -1,6 +1,6 @@
 import React, { FC, memo, ReactNode } from 'react'
 import { HeaderV1Wrapper } from './style'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 interface IProps {
   children?: ReactNode
@@ -13,6 +13,13 @@ interface IProps {
 const SectionHeaderV1: FC<IProps> = (props) => {
   const { title = '默认标题', keywords = [], moreText = '更多', moreLink = '' } = props
 
+  const navigate = useNavigate()
+
+  function handleKeywordClick(item: any) {
+    navigate(`/discover/songs?cat=${item}`)
+    window.scrollTo(0, 0)
+  }
+
   return (
     <HeaderV1Wrapper>
       <div className="left">
@@ -21,7 +28,7 @@ const SectionHeaderV1: FC<IProps> = (props) => {
           {keywords.map((item) => {
             return (
               <div className="item" key={item}>
-                <span className="link">{item}</span>
+                <span className="link" onClick={() => handleKeywordClick(item)}>{item}</span>
                 <span className="divider">|</span>
               </div>
             )

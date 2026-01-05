@@ -13,8 +13,8 @@ export function getPlayList(offset: number = 0, limit: number = 35, cat: string 
   return mqRequest.get({
     url: '/top/playlist',
     params: {
-      limit,
       offset,
+      limit,
       cat
     }
   })

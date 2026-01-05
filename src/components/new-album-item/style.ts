@@ -32,6 +32,7 @@ export const AlbumItemWrapper = styled.div`
       right: 25px;
       width: 22px;
       height: 22px;
+      z-index: 10;
       background: url(${require('@/assets/img/wyy_icon.png')}) no-repeat 0 -85px;
 
       &:hover {

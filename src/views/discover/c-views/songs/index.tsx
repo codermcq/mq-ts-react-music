@@ -1,21 +1,39 @@
-import React, { FC, memo, ReactNode, useEffect, useMemo, useRef, useState } from 'react'
+import React, {
+  FC,
+  memo,
+  ReactNode,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useCallback
+} from 'react'
 import { SongsWrapper } from './style'
 import { useAppDispatch, useAppSelector } from '@/store'
-import { fetchSongsData } from './store'
+import { changeCurrenPage, changeCurrenPageSize, fetchSongsData } from './store'
 import { shallowEqual } from 'react-redux'
 import SongsMenusItem from '@/components/songs-menus-item'
 import { Pagination } from 'antd'
+import { useSearchParams } from 'react-router-dom'
 
 interface IProps {
   children?: ReactNode
 }
 
 const Songs: FC<IProps> = (props) => {
-  const { songsList, categories, sub } = useAppSelector(
+  const [searchParams, setSearchParams] = useSearchParams()
+  const query = Object.fromEntries(searchParams)
+  const cat = query.cat
+  const limit = query.limit
+  const offset = query.offset
+
+  const { songsList, categories, sub, currentPage, currentPageSize } = useAppSelector(
     (state) => ({
       songsList: state.songs.songsList,
       categories: state.songs.categories,
-      sub: state.songs.sub
+      sub: state.songs.sub,
+      currentPage: state.songs.currentPage,
+      currentPageSize: state.songs.currentPageSize
     }),
     shallowEqual
   )
@@ -23,6 +41,14 @@ const Songs: FC<IProps> = (props) => {
   const [isShowSelect, setIsShowSelect] = useState(false)
   const [currentCat, setCurrentCat] = useState('全部')
   const [currentTag, setCurrentTag] = useState('全部')
+  // const [currentPage, setCurrentPage] = useState(0)
+  // const [currentPageSize, steCurrentPageSize] = useState(35)
+
+  useEffect(() => {
+    if (cat) {
+      setCurrentTag(cat)
+    }
+  })
 
   // console.log(categories)
   // 处理分类标签数据：根据 categories 的 key 值和 sub 中的 category 值进行匹配分组
@@ -63,18 +89,26 @@ const Songs: FC<IProps> = (props) => {
 
   const dispatch = useAppDispatch()
 
-  const songsPlayListRef = useRef(null)
-  const currentPageSize = useRef(35)
+  const songsPlayListRef = useRef<HTMLDivElement>(null)
+  const selectTagRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    dispatch(fetchSongsData({ page: 0, size: 35, cat: currentCat }))
+    if (offset && limit) {
+      dispatch(fetchSongsData({ page: Number(offset)/35, size: Number(limit), cat: currentCat }))
+    } else {
+      dispatch(fetchSongsData({ page: 0, size: 35, cat: currentCat }))
+    }
   }, [dispatch, currentCat])
 
   function handlePageChange(page: number, size: number) {
-    const currentPage = page - 1
-    dispatch(fetchSongsData({ page: currentPage, size, cat: currentCat }))
-    window.scrollTo(0, 0)
-    currentPageSize.current = size
+    const offsetPage = page - 1
+    changeCurrenPageSize(size)
+    dispatch(fetchSongsData({ page: offsetPage, size, cat: currentCat }))
+    searchParams.set('offset', (offsetPage * 35).toString())
+    searchParams.set('limit', size.toString())
+    setSearchParams(searchParams)
+    changeCurrenPage(page)
+    // window.scrollTo(0, 0)
   }
 
   // 处理选择分类按钮的点击
@@ -87,10 +121,30 @@ const Songs: FC<IProps> = (props) => {
 
   function handleSelectItemClick(tag: any) {
     setCurrentCat(tag)
-    dispatch(fetchSongsData({ page: 0, size: 35, cat: currentCat}))
+    dispatch(fetchSongsData({ page: 0, size: currentPageSize, cat: currentCat }))
     setIsShowSelect(false)
     setCurrentTag(tag)
+    setSearchParams({ cat: tag })
+    changeCurrenPageSize(0)
   }
+
+  const handleClickOutside = useCallback((event: MouseEvent) => {
+    if (selectTagRef.current && !selectTagRef.current.contains(event.target as Node)) {
+      setIsShowSelect(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (isShowSelect) {
+      document.addEventListener('mousedown', handleClickOutside)
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isShowSelect, handleClickOutside])
 
   return (
     <SongsWrapper ref={songsPlayListRef}>
@@ -104,37 +158,40 @@ const Songs: FC<IProps> = (props) => {
             </i>
           </a>
           {isShowSelect && (
-            <div className="select-catlist">
+            <div className="select-catlist" ref={selectTagRef}>
               <i className="icon"></i>
               <div className="select-header">
-                <a className="all-btn" onClick={() => handleSelectItemClick('全部')}>全部风格</a>
+                <a className="all-btn" onClick={() => handleSelectItemClick('全部')}>
+                  全部风格
+                </a>
               </div>
               <div className="select-content">
                 <div className="content-left">
                   {categoriesEntries &&
                     categoriesEntries?.map((item: any) => {
-                      return <div className="category-item" key={item}>{item}</div>
+                      return (
+                        <div className="category-item" key={item}>
+                          {item}
+                        </div>
+                      )
                     })}
                 </div>
                 <div className="content-right">
-                  {
-                    groupedCategoriesEntries && groupedCategoriesEntries.map((item: any) => {
+                  {groupedCategoriesEntries &&
+                    groupedCategoriesEntries.map((item: any) => {
                       return (
-                        <div className='tag' key={item}>
-                          {
-                            item.map((tag: any) => {
-                              return (
-                                <div className='tag-item' key={tag}>
-                                  <a onClick={() => handleSelectItemClick(tag)}>{tag}</a>
-                                  <span className='line'>|</span>
-                                </div>
-                              )
-                            })
-                          }
+                        <div className="tag" key={item}>
+                          {item.map((tag: any) => {
+                            return (
+                              <div className="tag-item" key={tag}>
+                                <a onClick={() => handleSelectItemClick(tag)}>{tag}</a>
+                                <span className="line">|</span>
+                              </div>
+                            )
+                          })}
                         </div>
                       )
-                    })
-                  }
+                    })}
                 </div>
               </div>
             </div>
@@ -157,8 +214,9 @@ const Songs: FC<IProps> = (props) => {
         align="center"
         defaultCurrent={1}
         total={350}
+        current={currentPage}
         pageSizeOptions={[10, 20, 35, 50]}
-        pageSize={currentPageSize.current}
+        pageSize={currentPageSize}
         onChange={handlePageChange}
       />
     </SongsWrapper>

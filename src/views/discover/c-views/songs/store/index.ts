@@ -1,16 +1,16 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { getPlayList, getPlaylistCatlist } from '../service'
-import { IRootState } from '@/store';
+import { IRootState } from '@/store'
 
 interface IParams {
-  page?: number,
+  page?: number
   size?: number
 }
 
 export const fetchSongsData = createAsyncThunk(
   'fetchSongs',
-  (params: { page: number; size: number, cat: string }, { dispatch }) => {
-    getPlayList(params.page, params.size, params.cat).then((res: any) => {
+  (params: { page: number; size: number; cat: string }, { dispatch }) => {
+    getPlayList(params.page * 35, params.size, params.cat).then((res: any) => {
       const result = res.playlists
       dispatch(changeSongsList(result))
     })
@@ -25,12 +25,16 @@ interface ISongsState {
   songsList: any[]
   categories: {}
   sub: any[]
+  currentPage: number
+  currentPageSize: number
 }
 
 const initialState: ISongsState = {
   songsList: [],
   categories: {},
-  sub: []
+  sub: [],
+  currentPage: 0,
+  currentPageSize: 0
 }
 
 const songsSclice = createSlice({
@@ -45,9 +49,21 @@ const songsSclice = createSlice({
     },
     changeSub(state, { payload }) {
       state.sub = payload
+    },
+    changeCurrenPage(state, { payload }) {
+      state.currentPage = payload
+    },
+    changeCurrenPageSize(state, { payload }) {
+      state.currentPageSize = payload
     }
   }
 })
 
-export const { changeSongsList, changeCategories, changeSub } = songsSclice.actions
+export const {
+  changeSongsList,
+  changeCategories,
+  changeSub,
+  changeCurrenPage,
+  changeCurrenPageSize
+} = songsSclice.actions
 export default songsSclice.reducer

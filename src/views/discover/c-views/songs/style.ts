@@ -71,7 +71,7 @@ export const SongsWrapper = styled.div`
 
     .select-catlist {
       position: absolute;
-      z-index: 10;
+      z-index: 1000;
       top: 55px;
       left: -30px;
       width: 720px;
@@ -127,7 +127,6 @@ export const SongsWrapper = styled.div`
             color: #333;
             font-weight: bold;
             font-size: 14px;
-
 
             &::before {
               display: inline-block;
