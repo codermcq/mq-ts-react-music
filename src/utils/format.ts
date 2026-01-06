@@ -23,3 +23,7 @@ export function formatTime(time: number) {
   const seconds = duration.seconds().toString().padStart(2, '0')
   return `${minutes}:${seconds}`
 }
+
+export function formatDate(timestamp: number) {
+  return dayjs(timestamp).format('YYYY-MM-DD')
+}

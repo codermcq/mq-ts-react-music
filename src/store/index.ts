@@ -3,6 +3,7 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import recommendReducer from '../views/discover/c-views/recommend/store'
 import playerReducer from '@/views/player/store'
 import songsReducer from '@/views/discover/c-views/songs/store'
+import playlistReducer from '@/views/menu-playlist/store'
 import { persistReducer, persistStore } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import { combineReducers } from '@reduxjs/toolkit'
@@ -11,7 +12,8 @@ import { combineReducers } from '@reduxjs/toolkit'
 const rootReducer = combineReducers({
   recommend: recommendReducer,
   player: playerReducer,
-  songs: songsReducer
+  songs: songsReducer,
+  playlist: playlistReducer
 })
 
 export type IRootState = ReturnType<typeof rootReducer>

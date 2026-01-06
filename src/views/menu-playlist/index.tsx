@@ -5,6 +5,8 @@ import { useSearchParams } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '@/store'
 import { getPlayTrackAll } from '@/components/songs-menus-item/service'
 import { shallowEqual } from 'react-redux'
+import { fetchPlaylistData } from './store'
+import { formatTime, formatDate } from '@/utils/format'
 
 interface IProps {
   children?: ReactNode
@@ -15,45 +17,63 @@ const MenuPlaylist: FC<IProps> = (props) => {
   const query = Object.fromEntries(searchParams)
   const id = Number(query.id)
 
-  const { hotRecommend, songsList } = useAppSelector(
+  const { currentPlaylist } = useAppSelector(
     (state) => ({
-      hotRecommend: state.recommend.hotRecommend,
-      songsList: state.songs.songsList
+      currentPlaylist: state.playlist.currentPlaylist
     }),
     shallowEqual
   )
 
-  // const [currentMenuSongs, setCurrentMenuSongs] = useState([])
-  const [currentPlaylist, setCurrentPlaylist] = useState([])
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    getPlayTrackAll(id).then((res: any) => {
-      const result = res.songs.slice(0, 20)
-      setCurrentPlaylist(result)
-    })
+    dispatch(fetchPlaylistData(id))
   }, [id])
 
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [])
 
-  const currentMenuSongs = hotRecommend.filter((item: any) => item.id === id)
+  console.log(currentPlaylist)
 
   return (
     <MenuPlaylistWrapper>
       <NavBar />
       <div className="menu-playlist">
         <PlaylistLeftWrapper>
-          <div className='left-header'>
-            <div className='img-cover'>
-              <img src="" alt="" />
+          <div className="left-header">
+            <div className="img-cover">
+              <img className="header-img" src={currentPlaylist?.coverImgUrl} alt="" />
+              <span className="mask"></span>
+            </div>
+            <div className="info">
+              <div className="info-name">
+                <i className="song-icon"></i>
+                <span className="name">{currentPlaylist.name}</span>
+              </div>
+              <div className="creator">
+                <img className="creator-img" src={currentPlaylist.creator.avatarUrl} alt="" />
+                <span className="creator-name">{currentPlaylist.creator.nickname}</span>
+                <img
+                  className="creator-level"
+                  src={currentPlaylist.creator.avatarDetail.identityIconUrl}
+                  alt=""
+                />
+                <span className="creator-date">{formatDate(currentPlaylist.createTime)} 创建</span>
+              </div>
+              <div className="tags">
+                <span className="tags-label">标签:</span>
+                {currentPlaylist.tags.map((tag: any) => {
+                  return <span className='tag' key={tag}>{tag}</span>
+                })}
+              </div>
+              <div className='desc'>
+                {currentPlaylist.description}
+              </div>
             </div>
           </div>
         </PlaylistLeftWrapper>
-        <PlaylistRightWrapper>
-          right
-        </PlaylistRightWrapper>
+        <PlaylistRightWrapper>right</PlaylistRightWrapper>
       </div>
     </MenuPlaylistWrapper>
   )
