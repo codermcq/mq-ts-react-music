@@ -27,12 +27,11 @@ const Songs: FC<IProps> = (props) => {
   const limit = query.limit
   const offset = query.offset
 
-  const { songsList, categories, sub, currentPage, currentPageSize } = useAppSelector(
+  const { songsList, categories, sub, currentPageSize } = useAppSelector(
     (state) => ({
       songsList: state.songs.songsList,
       categories: state.songs.categories,
       sub: state.songs.sub,
-      currentPage: state.songs.currentPage,
       currentPageSize: state.songs.currentPageSize
     }),
     shallowEqual
@@ -41,7 +40,7 @@ const Songs: FC<IProps> = (props) => {
   const [isShowSelect, setIsShowSelect] = useState(false)
   const [currentCat, setCurrentCat] = useState('全部')
   const [currentTag, setCurrentTag] = useState('全部')
-  // const [currentPage, setCurrentPage] = useState(0)
+  const [currentPage, setCurrentPage] = useState(0)
   // const [currentPageSize, steCurrentPageSize] = useState(35)
 
   useEffect(() => {
@@ -50,7 +49,6 @@ const Songs: FC<IProps> = (props) => {
     }
   })
 
-  // console.log(categories)
   // 处理分类标签数据：根据 categories 的 key 值和 sub 中的 category 值进行匹配分组
   const groupedCategories = useMemo(() => {
     const result: Record<string, string[]> = {}
@@ -96,7 +94,7 @@ const Songs: FC<IProps> = (props) => {
     if (offset && limit) {
       console.log(offset, limit)
       dispatch(fetchSongsData({ page: (Number(offset) / Number(limit)), size: Number(limit), cat: currentCat }))
-      changeCurrentPage(Number(offset) / Number(limit))
+      setCurrentPage(Number(offset) / Number(limit) + 1)
     } else {
       dispatch(fetchSongsData({ page: 0, size: 35, cat: currentCat }))
     }
@@ -109,6 +107,7 @@ const Songs: FC<IProps> = (props) => {
     searchParams.set('offset', (offsetPage * 35).toString())
     searchParams.set('limit', size.toString())
     setSearchParams(searchParams)
+    setCurrentPage(page)
     changeCurrentPage(page)
     // window.scrollTo(0, 0)
   }
@@ -123,9 +122,7 @@ const Songs: FC<IProps> = (props) => {
 
   function handleSelectItemClick(tag: any) {
     setCurrentCat(tag)
-    // dispatch(fetchSongsData({ page: 0, size: currentPageSize, cat: currentCat }))
     setIsShowSelect(false)
-    setCurrentTag(tag)
     setSearchParams({ cat: tag })
     changeCurrentPageSize(0)
   }
